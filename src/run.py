@@ -49,13 +49,15 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
     fig = plt.figure()
-    a = fig.add_subplot(2, 2, 1)
-    a.set_title('Result')
+    #a = fig.add_subplot(2, 2, 1)
+    #a.set_title('Result')
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
     bgimg = cv2.cvtColor(image.astype(np.uint8), cv2.COLOR_BGR2RGB)
     bgimg = cv2.resize(bgimg, (e.heatMat.shape[1], e.heatMat.shape[0]), interpolation=cv2.INTER_AREA)
 
+    #uncoment to show heatmaps
+    """
     # show network output
     a = fig.add_subplot(2, 2, 2)
     plt.imshow(bgimg, alpha=0.5)
@@ -77,7 +79,8 @@ if __name__ == '__main__':
     a.set_title('Vectormap-y')
     # plt.imshow(CocoPose.get_bgimg(inp, target_size=(vectmap.shape[1], vectmap.shape[0])), alpha=0.5)
     plt.imshow(tmp2_even, cmap=plt.cm.gray, alpha=0.5)
-    plt.colorbar()
+    """
+    #plt.colorbar()
     plt.show()
 
     import sys

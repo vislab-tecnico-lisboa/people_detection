@@ -18,12 +18,41 @@ formatter = logging.Formatter('[%(asctime)s] [%(name)s] [%(levelname)s] %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-
+class BoundingBox:
+    def __init__(self,x,y,h,w):
+        self.x = x
+        self.y = y
+        self.h = h
+        self.w = w
+    def __str__(self):
+        return str((self.x,self.y,self.h,self.w))
 class Human:
     """
     body_parts: list of BodyPart
     """
-    __slots__ = ('body_parts', 'pairs', 'uidx_list')
+    __slots__ = ('body_parts', 'pairs', 'uidx_list','body_bb','face_bb')
+    
+    valid_parts_body = [CocoPart.Nose.value,
+                        CocoPart.Neck.value,
+                        CocoPart.RShoulder.value,
+                        CocoPart.LShoulder.value,
+                        CocoPart.RHip.value,
+                        CocoPart.RKnee.value,
+                        CocoPart.RAnkle.value,
+                        CocoPart.LHip.value,
+                        CocoPart.LKnee.value,
+                        CocoPart.LAnkle.value,
+                        CocoPart.REye.value,
+                        CocoPart.LEye.value,
+                        CocoPart.REar.value,
+                        CocoPart.LEar.value
+                        ] 
+    valid_parts_face = [CocoPart.Nose.value,
+                        CocoPart.REye.value,
+                        CocoPart.LEye.value,
+                        CocoPart.REar.value,
+                        CocoPart.LEar.value
+                        ] 
 
     def __init__(self, pairs):
         self.pairs = []
@@ -31,6 +60,8 @@ class Human:
         self.body_parts = {}
         for pair in pairs:
             self.add_pair(pair)
+        
+        
 
     @staticmethod
     def _get_uidx(part_idx, idx):
@@ -46,6 +77,54 @@ class Human:
                                                    pair.coord2[0], pair.coord2[1], pair.score)
         self.uidx_list.add(Human._get_uidx(pair.part_idx1, pair.idx1))
         self.uidx_list.add(Human._get_uidx(pair.part_idx2, pair.idx2))
+    
+    def compute_body_bb(self):
+        min_x = 10000000000 # inf
+        min_y = 10000000000 # inf
+        max_x = -2 # -inf
+        max_y = -2 # -inf
+        for key,body_part in self.body_parts.items():
+            if body_part.part_idx in Human.valid_parts_body:
+                # add score if
+                if body_part.x > max_x:
+                    max_x = body_part.x
+                if body_part.x < min_x:
+                    min_x = body_part.x
+                if body_part.y > max_y:
+                    max_y = body_part.y
+                if body_part.y < min_y:
+                    min_y = body_part.y
+
+        height = (max_y-min_y) * 1.2 # arbitraty scale by trial and error
+        width = (max_x-min_x) * 1.2 # arbitraty scale by trial and error
+        min_x -= (width/1.2)*0.1
+        min_y -= (height/1.2)*0.1
+        
+        self.body_bb = BoundingBox(min_x,min_y,height,width)
+
+    def compute_face_bb(self):
+        min_x = 10000000000 # inf
+        min_y = 10000000000 # inf
+        max_x = -2 # -inf
+        max_y = -2 # -inf
+        for key,body_part in self.body_parts.items():
+            if body_part.part_idx in Human.valid_parts_face:
+                # add score if
+                if body_part.part_idx == CocoPart.REar.value:
+                    min_x = body_part.x
+                    min_y = body_part.y
+                if body_part.part_idx == CocoPart.LEar.value:
+                    max_x = body_part.x
+                    max_y = body_part.y
+
+        #square
+        width = (max_x-min_x) * 1.5 # arbitraty scale by trial and error
+        height = width
+        
+        min_x -= (width/1.2)*0.1
+        min_y -= (height/1.2)*0.3
+        
+        self.face_bb = BoundingBox(min_x,min_y,height,width)
 
     def is_connected(self, other):
         return len(self.uidx_list & other.uidx_list) > 0
@@ -175,7 +254,9 @@ class PoseEstimator:
 
         # reject by subset max score
         humans = [human for human in humans if human.get_max_score() >= PoseEstimator.Part_Score_Threshold]
-
+        for human in humans:
+            human.compute_body_bb()
+            human.compute_face_bb()
         return humans
 
     @staticmethod
@@ -310,6 +391,21 @@ class TfPoseEstimator:
                     continue
 
                 npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
+            #draw body bb
+            
+            pt1 = (int(human.body_bb.x*image_w),int(human.body_bb.y*image_h))
+            pt2 = (int((human.body_bb.x+human.body_bb.w)*image_w),int((human.body_bb.y+human.body_bb.h)*image_h))
+            cv2.rectangle(npimg,pt1,pt2,(0,255,0),3)
+
+            #draw face bb
+            try:
+                pt1 = (int(human.face_bb.x*image_w),int(human.face_bb.y*image_h))
+                pt2 = (int((human.face_bb.x+human.face_bb.w)*image_w),int((human.face_bb.y+human.face_bb.h)*image_h))
+                cv2.rectangle(npimg,pt1,pt2,(0,0,255),3)
+            except Exception as e:
+                logger.debug('No face for person')
+                
+            
 
         return npimg
 

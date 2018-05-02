@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
         cv2.imshow('tf-pose-estimation result', image)
-        cv2.waitKey(5)
+        cv2.waitKey(0)
 
         all_humans[file.replace(args.folder, '')] = humans
 
