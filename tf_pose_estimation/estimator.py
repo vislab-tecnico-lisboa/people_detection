@@ -8,8 +8,7 @@ import numpy as np
 import tensorflow as tf
 from scipy.ndimage import maximum_filter, gaussian_filter
 
-import .common
-from .common import CocoPairsNetwork, CocoPairs, CocoPart
+from tf_pose_estimation.common import CocoPairsNetwork, CocoPairs, CocoPart, CocoColors
 
 logger = logging.getLogger('TfPoseEstimator')
 logger.setLevel(logging.INFO)
@@ -31,7 +30,7 @@ class Human:
     body_parts: list of BodyPart
     """
     __slots__ = ('body_parts', 'pairs', 'uidx_list','body_bb','face_bb')
-    
+
     valid_parts_body = [CocoPart.Nose.value,
                         CocoPart.Neck.value,
                         CocoPart.RShoulder.value,
@@ -46,13 +45,13 @@ class Human:
                         CocoPart.LEye.value,
                         CocoPart.REar.value,
                         CocoPart.LEar.value
-                        ] 
+                        ]
     valid_parts_face = [CocoPart.Nose.value,
                         CocoPart.REye.value,
                         CocoPart.LEye.value,
                         CocoPart.REar.value,
                         CocoPart.LEar.value
-                        ] 
+                        ]
 
     def __init__(self, pairs):
         self.pairs = []
@@ -60,8 +59,8 @@ class Human:
         self.body_parts = {}
         for pair in pairs:
             self.add_pair(pair)
-        
-        
+
+
 
     @staticmethod
     def _get_uidx(part_idx, idx):
@@ -77,7 +76,7 @@ class Human:
                                                    pair.coord2[0], pair.coord2[1], pair.score)
         self.uidx_list.add(Human._get_uidx(pair.part_idx1, pair.idx1))
         self.uidx_list.add(Human._get_uidx(pair.part_idx2, pair.idx2))
-    
+
     def compute_body_bb(self):
         min_x = 10000000000 # inf
         min_y = 10000000000 # inf
@@ -99,7 +98,7 @@ class Human:
         width = (max_x-min_x) * 1.2 # arbitraty scale by trial and error
         min_x -= (width/1.2)*0.1
         min_y -= (height/1.2)*0.1
-        
+
         self.body_bb = BoundingBox(min_x,min_y,height,width)
 
     def compute_face_bb(self):
@@ -120,10 +119,10 @@ class Human:
         #square
         width = (max_x-min_x) * 1.5 # arbitraty scale by trial and error
         height = width
-        
+
         min_x -= (width/1.2)*0.1
         min_y -= (height/1.2)*0.3
-        
+
         self.face_bb = BoundingBox(min_x,min_y,height,width)
 
     def is_connected(self, other):
@@ -376,23 +375,23 @@ class TfPoseEstimator:
         centers = {}
         for human in humans:
             # draw point
-            for i in range(common.CocoPart.Background.value):
+            for i in range(CocoPart.Background.value):
                 if i not in human.body_parts.keys():
                     continue
 
                 body_part = human.body_parts[i]
                 center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
                 centers[i] = center
-                cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
+                cv2.circle(npimg, center, 3, CocoColors[i], thickness=3, lineType=8, shift=0)
 
             # draw line
-            for pair_order, pair in enumerate(common.CocoPairsRender):
+            for pair_order, pair in enumerate(CocoPairsRender):
                 if pair[0] not in human.body_parts.keys() or pair[1] not in human.body_parts.keys():
                     continue
 
-                npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
+                npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], CocoColors[pair_order], 3)
             #draw body bb
-            
+
             pt1 = (int(human.body_bb.x*image_w),int(human.body_bb.y*image_h))
             pt2 = (int((human.body_bb.x+human.body_bb.w)*image_w),int((human.body_bb.y+human.body_bb.h)*image_h))
             cv2.rectangle(npimg,pt1,pt2,(0,255,0),3)
@@ -404,8 +403,8 @@ class TfPoseEstimator:
                 cv2.rectangle(npimg,pt1,pt2,(0,0,255),3)
             except Exception as e:
                 logger.debug('No face for person')
-                
-            
+
+
 
         return npimg
 
