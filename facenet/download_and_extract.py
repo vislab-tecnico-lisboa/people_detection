@@ -8,7 +8,8 @@ model_dict = {
     '20170131-234652': '0B5MzpY9kBtDVSGM0RmVET2EwVEk',
     '20170216-091149': '0B5MzpY9kBtDVTGZjcWkzT3pldDA',
     '20170512-110547': '0B5MzpY9kBtDVZ2RpVDYwWmxoSUk',
-    'last': '1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-'
+    'last': '1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-',
+    'vislabclassifier': '153gf4_dG9kL3_Cf82F_3QdXXSMuEhMxu'
     }
 
 def download_and_extract_file(model_name, data_dir):
@@ -20,7 +21,7 @@ def download_and_extract_file(model_name, data_dir):
         with zipfile.ZipFile(destination, 'r') as zip_ref:
             print('Extracting file to %s' % data_dir)
             zip_ref.extractall(data_dir)
-
+            os.remove(destination)
 def download_file_from_google_drive(file_id, destination):
     
         URL = "https://drive.google.com/uc?export=download"

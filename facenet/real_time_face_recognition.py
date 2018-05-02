@@ -57,7 +57,7 @@ def main(args):
     frame_count = 0
 
     video_capture = cv2.VideoCapture(0)
-    face_recognition = face.Recognition()
+    face_recognition = face.Recognition(args.facenet_model,args.classifier_model)
     start_time = time.time()
 
     if args.debug:
@@ -96,6 +96,8 @@ def parse_arguments(argv):
 
     parser.add_argument('--debug', action='store_true',
                         help='Enable some debug outputs.')
+    parser.add_argument('facenet_model',type=str)
+    parser.add_argument('classifier_model',type=str)
     return parser.parse_args(argv)
 
 

@@ -38,7 +38,7 @@ import tensorflow as tf
 from scipy import misc
 
 import align.detect_face
-import facenet.facenet as facenet
+import facenet as facenet
 
 
 gpu_memory_fraction = 0.3
