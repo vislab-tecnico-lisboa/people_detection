@@ -8,8 +8,8 @@ import numpy as np
 import tensorflow as tf
 from scipy.ndimage import maximum_filter, gaussian_filter
 
-import common
-from common import CocoPairsNetwork, CocoPairs, CocoPart
+import .common
+from .common import CocoPairsNetwork, CocoPairs, CocoPart
 
 logger = logging.getLogger('TfPoseEstimator')
 logger.setLevel(logging.INFO)
