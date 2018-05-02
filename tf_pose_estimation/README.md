@@ -29,14 +29,6 @@ You need dependencies below.
 - tensorflow 1.4.1+
 - opencv3, protobuf, python3-tk
 
-### Install
-
-```bash
-$ git clone https://www.github.com/ildoonet/tf-openpose
-$ cd tf-openpose
-$ pip3 install -r requirements.txt
-```
-
 ## Models
 
 I have tried multiple variations of models to find optmized network architecture. Some of them are below and checkpoint files are provided for research purpose. 

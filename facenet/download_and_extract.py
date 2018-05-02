@@ -1,13 +1,14 @@
 import requests
 import zipfile
 import os
+import argparse
 
 model_dict = {
     'lfw-subset':      '1B5BQUZuJO-paxdN8UclxeHAR1WnR_Tzi', 
     '20170131-234652': '0B5MzpY9kBtDVSGM0RmVET2EwVEk',
     '20170216-091149': '0B5MzpY9kBtDVTGZjcWkzT3pldDA',
     '20170512-110547': '0B5MzpY9kBtDVZ2RpVDYwWmxoSUk',
-    '20180402-114759': '1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-'
+    'last': '1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-'
     }
 
 def download_and_extract_file(model_name, data_dir):
@@ -49,3 +50,13 @@ def save_response_content(response, destination):
         for chunk in response.iter_content(CHUNK_SIZE):
             if chunk: # filter out keep-alive new chunks
                 f.write(chunk)
+
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser(description='input parser')
+
+    parser.add_argument('modelname', type=str,
+                   help='the name of the model that you want to download')
+    parser.add_argument('output_foler',type=str,help='folder where you want to save your model')
+    args = parser.parse_args()
+    download_and_extract_file(args.modelname,args.output_foler)
