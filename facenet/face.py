@@ -38,12 +38,10 @@ import tensorflow as tf
 from scipy import misc
 
 import align.detect_face
-import facenet
+import facenet.facenet as facenet
 
 
 gpu_memory_fraction = 0.3
-facenet_model_checkpoint = os.path.dirname(__file__) + "/../model_checkpoints/20170512-110547"
-classifier_model = os.path.dirname(__file__) + "/../model_checkpoints/my_classifier_1.pkl"
 debug = False
 
 
@@ -57,10 +55,10 @@ class Face:
 
 
 class Recognition:
-    def __init__(self):
+    def __init__(self,facenet_model,classifier_model):
         self.detect = Detection()
-        self.encoder = Encoder()
-        self.identifier = Identifier()
+        self.encoder = Encoder(facenet_model)
+        self.identifier = Identifier(classifier_model)
 
     def add_identity(self, image, person_name):
         faces = self.detect.find_faces(image)
@@ -84,7 +82,7 @@ class Recognition:
 
 
 class Identifier:
-    def __init__(self):
+    def __init__(self,classifier_model):
         with open(classifier_model, 'rb') as infile:
             self.model, self.class_names = pickle.load(infile)
 
@@ -96,10 +94,10 @@ class Identifier:
 
 
 class Encoder:
-    def __init__(self):
+    def __init__(self,facenet_model):
         self.sess = tf.Session()
         with self.sess.as_default():
-            facenet.load_model(facenet_model_checkpoint)
+            facenet.load_model(facenet_model)
 
     def generate_embedding(self, face):
         # Get input and output tensors
