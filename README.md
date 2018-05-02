@@ -2,7 +2,10 @@
 
 Tools for detect and describe pedestrians
 
-This repository have code contributuions from:
+
+## Contributions
+
+This repository have code contributions from:
 
 [ildonet/tf-pose-estimation](https://github.com/ildoonet/tf-pose-estimation)
 
