@@ -4,7 +4,7 @@ import tensorflow as tf
 from network_mobilenet import MobilenetNetwork
 from network_mobilenet_thin import MobilenetNetworkThin
 
-from network_cmu import CmuNetwork
+from tf_pose_estimation.network_cmu import CmuNetwork
 
 
 def _get_base_path():
