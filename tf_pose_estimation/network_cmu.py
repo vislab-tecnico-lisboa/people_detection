@@ -1,8 +1,8 @@
-import network_base
+import tf_pose_estimation.network_base
 import tensorflow as tf
 
 
-class CmuNetwork(network_base.BaseNetwork):
+class CmuNetwork(tf_pose_estimation.network_base.BaseNetwork):
     def setup(self):
         (self.feed('image')
              .normalize_vgg(name='preprocess')
