@@ -1,8 +1,8 @@
 import os
 
 import tensorflow as tf
-from network_mobilenet import MobilenetNetwork
-from network_mobilenet_thin import MobilenetNetworkThin
+from tf_pose_estimation.network_mobilenet import MobilenetNetwork
+from tf_pose_estimation.network_mobilenet_thin import MobilenetNetworkThin
 
 from tf_pose_estimation.network_cmu import CmuNetwork
 
