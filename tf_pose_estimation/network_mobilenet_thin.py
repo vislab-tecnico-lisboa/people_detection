@@ -1,9 +1,9 @@
 import tensorflow as tf
 
-import network_base
+import tf_pose_estimation.network_base
 
 
-class MobilenetNetworkThin(network_base.BaseNetwork):
+class MobilenetNetworkThin(tf_pose_estimation.etwork_base.BaseNetwork):
     def __init__(self, inputs, trainable=True, conv_width=1.0, conv_width2=None):
         self.conv_width = conv_width
         self.conv_width2 = conv_width2 if conv_width2 else conv_width
