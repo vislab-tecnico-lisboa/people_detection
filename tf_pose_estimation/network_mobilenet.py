@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-import network_base
+import tf_pose_estimation.network_base
 
 
 class MobilenetNetwork(network_base.BaseNetwork):
