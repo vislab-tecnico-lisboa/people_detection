@@ -38,7 +38,7 @@ import tensorflow as tf
 from scipy import misc
 
 import facenet.align.detect_face
-import facenet.facenet
+import facenet.general
 
 
 gpu_memory_fraction = 0.3
@@ -97,7 +97,7 @@ class Encoder:
     def __init__(self,facenet_model):
         self.sess = tf.Session()
         with self.sess.as_default():
-            facenet.facenet.load_model(facenet_model)
+            facenet.general.load_model(facenet_model)
 
     def generate_embedding(self, face):
         # Get input and output tensors
