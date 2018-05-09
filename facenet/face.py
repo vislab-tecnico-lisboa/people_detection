@@ -128,7 +128,7 @@ class Detection:
             gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction)
             sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
             with sess.as_default():
-                return align.detect_face.create_mtcnn(sess, None)
+                return facenet.align.detect_face.create_mtcnn(sess, None)
 
     def find_faces(self, image):
         faces = []
