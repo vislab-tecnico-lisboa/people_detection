@@ -38,7 +38,7 @@ import tensorflow as tf
 from scipy import misc
 
 import facenet.align.detect_face
-import facenet.facenet as facenet
+import facenet.facenet
 
 
 gpu_memory_fraction = 0.3
@@ -97,7 +97,7 @@ class Encoder:
     def __init__(self,facenet_model):
         self.sess = tf.Session()
         with self.sess.as_default():
-            facenet.load_model(facenet_model)
+            facenet.facenet.load_model(facenet_model)
 
     def generate_embedding(self, face):
         # Get input and output tensors
@@ -105,7 +105,7 @@ class Encoder:
         embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
 
-        prewhiten_face = facenet.prewhiten(face.image)
+        prewhiten_face = facenet.facenet.prewhiten(face.image)
 
         # Run forward pass to calculate embeddings
         feed_dict = {images_placeholder: [prewhiten_face], phase_train_placeholder: False}
