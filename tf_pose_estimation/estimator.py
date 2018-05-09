@@ -78,6 +78,7 @@ class Human:
         self.uidx_list.add(Human._get_uidx(pair.part_idx2, pair.idx2))
 
     def compute_body_bb(self):
+
         min_x = 10000000000 # inf
         min_y = 10000000000 # inf
         max_x = -2 # -inf
@@ -101,27 +102,28 @@ class Human:
 
         self.body_bb = BoundingBox(min_x,min_y,height,width)
 
-    def compute_face_bb(self):
-        min_x = 10000000000 # inf
-        min_y = 10000000000 # inf
-        max_x = -2 # -inf
-        max_y = -2 # -inf
+
+    def compute_face_bb(self,imgshape):
+
         for key,body_part in self.body_parts.items():
-            if body_part.part_idx in Human.valid_parts_face:
-                # add score if
-                if body_part.part_idx == CocoPart.REar.value:
-                    min_x = body_part.x
-                    min_y = body_part.y
-                if body_part.part_idx == CocoPart.LEar.value:
-                    max_x = body_part.x
-                    max_y = body_part.y
+            if body_part.part_idx == CocoPart.Nose.value:
+                x_center = body_part.x
+                y_center = body_part.y
+            elif body_part.part_idx == CocoPart.REye.value:
+                x_r_eye = body_part.x
+                y_r_eye = body_part.y
+            elif body_part.part_idx == CocoPart.LEye.value:
+                x_l_eye = body_part.x
+                y_l_eye = body_part.y
+        try:
+            width = (x_l_eye-x_r_eye) * 2.5 # arbitraty scale by trial and error
+            height = width * (imgshape[1]/imgshape[0])
+            min_x = x_center - width/2
+            min_y = y_center - height/2
+        except Exception:
+            self.face_bb = None
+            return 
 
-        #square
-        width = (max_x-min_x) * 1.5 # arbitraty scale by trial and error
-        height = width
-
-        min_x -= (width/1.2)*0.1
-        min_y -= (height/1.2)*0.3
 
         self.face_bb = BoundingBox(min_x,min_y,height,width)
 
@@ -253,9 +255,7 @@ class PoseEstimator:
 
         # reject by subset max score
         humans = [human for human in humans if human.get_max_score() >= PoseEstimator.Part_Score_Threshold]
-        for human in humans:
-            human.compute_body_bb()
-            human.compute_face_bb()
+
         return humans
 
     @staticmethod
@@ -541,4 +541,7 @@ class TfPoseEstimator:
             self.pafMat = resized_pafMat / (np.log(resized_cntMat) + 1)
 
         humans = PoseEstimator.estimate(self.heatMat, self.pafMat)
+        for human in humans:
+            human.compute_body_bb()
+            human.compute_face_bb(npimg.shape)
         return humans
