@@ -118,8 +118,8 @@ class Detection:
     threshold = [0.6, 0.7, 0.7]  # three steps's threshold
     factor = 0.709  # scale factor
 
-    def __init__(self,model_path, face_crop_size=160, face_crop_margin=32):
-        self.pnet, self.rnet, self.onet = self._setup_mtcnn()
+    def __init__(self,model_path,face_crop_size=160, face_crop_margin=32):
+        self.pnet, self.rnet, self.onet = self._setup_mtcnn(model_path)
         self.face_crop_size = face_crop_size
         self.face_crop_margin = face_crop_margin
 
