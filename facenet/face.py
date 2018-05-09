@@ -133,7 +133,7 @@ class Detection:
     def find_faces(self, image):
         faces = []
 
-        bounding_boxes, _ = align.detect_face.detect_face(image, self.minsize,
+        bounding_boxes, _ = facenet.align.detect_face.detect_face(image, self.minsize,
                                                           self.pnet, self.rnet, self.onet,
                                                           self.threshold, self.factor)
         for bb in bounding_boxes:
