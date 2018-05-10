@@ -12,8 +12,8 @@ import numpy as np
 from tf_pose_estimation.estimator import TfPoseEstimator
 from tf_pose_estimation.networks import get_graph_path, model_wh
 
-from lifting.prob_model import Prob3dPose
-from lifting.draw import plot_pose
+#from lifting.prob_model import Prob3dPose
+#from lifting.draw import plot_pose
 
 logger = logging.getLogger('TfPoseEstimator')
 logger.setLevel(logging.DEBUG)
