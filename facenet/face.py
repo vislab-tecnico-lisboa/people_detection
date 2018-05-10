@@ -105,7 +105,7 @@ class Encoder:
         embeddings = self.sess.graph.get_tensor_by_name("embeddings:0")
         phase_train_placeholder = self.sess.graph.get_tensor_by_name("phase_train:0")
 
-        prewhiten_face = facenet.facenet.prewhiten(face.image)
+        prewhiten_face = facenet.general.prewhiten(face.image)
 
         # Run forward pass to calculate embeddings
         feed_dict = {images_placeholder: [prewhiten_face], phase_train_placeholder: False}
