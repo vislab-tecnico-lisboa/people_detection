@@ -116,13 +116,16 @@ class Human:
                 x_l_eye = body_part.x
                 y_l_eye = body_part.y
         try:
-            width = (x_l_eye-x_r_eye) * 2.5 # arbitraty scale by trial and error
-            height = width * (imgshape[1]/imgshape[0])
-            min_x = x_center - width/2
-            min_y = y_center - height/2
+            w_image = imgshape[1]
+            h_image = imgshape[0]
+
+            width = (x_l_eye-x_r_eye) * 2.5 * w_image # arbitraty scale by trial and error
+            height = width
+            min_x = x_center*w_image - width/2
+            min_y = y_center*h_image - height/2
         except Exception:
             self.face_bb = None
-            return 
+            return
 
 
         self.face_bb = BoundingBox(min_x,min_y,height,width)
@@ -391,15 +394,17 @@ class TfPoseEstimator:
 
                 npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], CocoColors[pair_order], 3)
             #draw body bb
-
-            pt1 = (int(human.body_bb.x*image_w),int(human.body_bb.y*image_h))
-            pt2 = (int((human.body_bb.x+human.body_bb.w)*image_w),int((human.body_bb.y+human.body_bb.h)*image_h))
-            cv2.rectangle(npimg,pt1,pt2,(0,255,0),3)
-
+            try:
+                pt1 = (int(human.body_bb.x*image_w),int(human.body_bb.y*image_h))
+                pt2 = (int((human.body_bb.x+human.body_bb.w)*image_w),int((human.body_bb.y+human.body_bb.h)*image_h))
+                cv2.rectangle(npimg,pt1,pt2,(0,255,0),3)
+            except:
+                logger.debug('No BoundingBox for person')
             #draw face bb
             try:
-                pt1 = (int(human.face_bb.x*image_w),int(human.face_bb.y*image_h))
-                pt2 = (int((human.face_bb.x+human.face_bb.w)*image_w),int((human.face_bb.y+human.face_bb.h)*image_h))
+                pt1 = (int(human.face_bb.x),int(human.face_bb.y))
+                pt2 = (int((human.face_bb.x+human.face_bb.w)),int((human.face_bb.y+human.face_bb.h)))
+                print('w',pt2[0]-pt1[0],'h',pt2[1]-pt2[0])
                 cv2.rectangle(npimg,pt1,pt2,(0,0,255),3)
             except Exception as e:
                 logger.debug('No face for person')
@@ -543,5 +548,5 @@ class TfPoseEstimator:
         humans = PoseEstimator.estimate(self.heatMat, self.pafMat)
         for human in humans:
             human.compute_body_bb()
-            human.compute_face_bb(npimg.shape)
+            human.compute_face_bb(npimg.shape[:2])
         return humans
