@@ -404,7 +404,6 @@ class TfPoseEstimator:
             try:
                 pt1 = (int(human.face_bb.x),int(human.face_bb.y))
                 pt2 = (int((human.face_bb.x+human.face_bb.w)),int((human.face_bb.y+human.face_bb.h)))
-                print('w',pt2[0]-pt1[0],'h',pt2[1]-pt2[0])
                 cv2.rectangle(npimg,pt1,pt2,(0,0,255),3)
             except Exception as e:
                 logger.debug('No face for person')
