@@ -95,10 +95,10 @@ class Human:
                 if body_part.y < min_y:
                     min_y = body_part.y
 
-        height = (max_y-min_y) * 1.2 # arbitraty scale by trial and error
-        width = (max_x-min_x) * 1.2 # arbitraty scale by trial and error
-        min_x -= (width/1.2)*0.1
-        min_y -= (height/1.2)*0.1
+        height = (max_y-min_y) * 1.4 # arbitraty scale by trial and error
+        width = (max_x-min_x) * 1.4 # arbitraty scale by trial and error
+        min_x -= (width/1.4)*0.1
+        min_y -= (height/1.4)*0.1
 
         self.body_bb = BoundingBox(min_x,min_y,height,width)
 
