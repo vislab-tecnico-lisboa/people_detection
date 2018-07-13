@@ -95,10 +95,10 @@ class Human:
                 if body_part.y < min_y:
                     min_y = body_part.y
 
-        height = (max_y-min_y) * 1.4 # arbitraty scale by trial and error
-        width = (max_x-min_x) * 1.4 # arbitraty scale by trial and error
-        min_x -= (width/1.4)*0.1
-        min_y -= (height/1.4)*0.1
+        height = (max_y-min_y) * 1.1 # arbitraty scale by trial and error
+        width = (max_x-min_x) * 1.1 # arbitraty scale by trial and error
+        min_x -= (width/1.1)*0.1
+        min_y -= (height/1.1)*0.1
 
         self.body_bb = BoundingBox(min_x,min_y,height,width)
 
@@ -109,17 +109,17 @@ class Human:
             if body_part.part_idx == CocoPart.Nose.value:
                 x_center = body_part.x
                 y_center = body_part.y
-            elif body_part.part_idx == CocoPart.REye.value:
-                x_r_eye = body_part.x
-                y_r_eye = body_part.y
-            elif body_part.part_idx == CocoPart.LEye.value:
-                x_l_eye = body_part.x
-                y_l_eye = body_part.y
+            elif body_part.part_idx == CocoPart.REar.value:
+                x_r_ear = body_part.x
+                y_r_ear = body_part.y
+            elif body_part.part_idx == CocoPart.LEar.value:
+                x_l_ear = body_part.x
+                y_l_ear = body_part.y
         try:
             w_image = imgshape[1]
             h_image = imgshape[0]
-
-            width = (x_l_eye-x_r_eye) * 2.5 * w_image # arbitraty scale by trial and error
+	   a
+            width = (x_l_ear-x_r_ear) * 2.1 * w_image # arbitraty scale by trial and error
             height = width
             min_x = x_center*w_image - width/2
             min_y = y_center*h_image - height/2
