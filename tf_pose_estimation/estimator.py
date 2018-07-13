@@ -118,7 +118,7 @@ class Human:
         try:
             w_image = imgshape[1]
             h_image = imgshape[0]
-	   a
+	   
             width = (x_l_ear-x_r_ear) * 2.1 * w_image # arbitraty scale by trial and error
             height = width
             min_x = x_center*w_image - width/2
