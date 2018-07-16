@@ -119,7 +119,7 @@ class Human:
             w_image = imgshape[1]
             h_image = imgshape[0]
 	   
-            width = (x_l_ear-x_r_ear) * 1.4 * w_image # arbitraty scale by trial and error
+            width = (x_l_ear-x_r_ear) * 1.2 * w_image # arbitraty scale by trial and error
             height = width
             min_x = x_center*w_image - width/2
             min_y = y_center*h_image - height/2
