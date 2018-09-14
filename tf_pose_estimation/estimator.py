@@ -109,17 +109,17 @@ class Human:
             if body_part.part_idx == CocoPart.Nose.value:
                 x_center = body_part.x
                 y_center = body_part.y
-            elif body_part.part_idx == CocoPart.REar.value:
+            elif body_part.part_idx == CocoPart.REye.value:
                 x_r_ear = body_part.x
                 y_r_ear = body_part.y
-            elif body_part.part_idx == CocoPart.LEar.value:
+            elif body_part.part_idx == CocoPart.LEye.value:
                 x_l_ear = body_part.x
                 y_l_ear = body_part.y
         try:
             w_image = imgshape[1]
             h_image = imgshape[0]
 	   
-            width = (x_l_ear-x_r_ear) * 1.2 * w_image # arbitraty scale by trial and error
+            width = (x_l_ear-x_r_ear) * 3 * w_image # arbitraty scale by trial and error
             height = width
             min_x = x_center*w_image - width/2
             min_y = y_center*h_image - height/2
