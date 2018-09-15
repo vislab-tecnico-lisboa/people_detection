@@ -89,10 +89,8 @@ class Identifier:
     def identify(self, face):
         if face.embedding is not None:
             predictions = self.model.predict_proba([face.embedding])
-            print(predictions)
-	    print(self.class_names)
 	    best_class_indices = np.argmax(predictions, axis=1)
-            return (self.class_names[best_class_indices[0]],predictions[0,best_class_indices[0]])
+            return (self.class_names,predictions[0,:])
 
 
 class Encoder:
